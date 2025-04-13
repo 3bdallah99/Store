@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Services
 {
-    public class ProductBrand : BaseEntity<int>
+    public class AssemblyReference
     {
-        public string Name { get; set; }
 
     }
 }

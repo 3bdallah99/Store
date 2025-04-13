@@ -11,11 +11,11 @@ namespace Persistence.Data
 {
     public class StoreDbContext :DbContext
     {
-        private readonly DbContextOptions<StoreDbContext> _options;
+       
 
-        public StoreDbContext(DbContextOptions<StoreDbContext> options)
+        public StoreDbContext(DbContextOptions<StoreDbContext> options) : base(options)
         {
-            _options = options;
+            
         }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductBrand> ProductBrands { get; set; }

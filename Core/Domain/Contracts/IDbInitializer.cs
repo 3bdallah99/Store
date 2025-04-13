@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Domain.Contracts
 {
-    public class ProductBrand : BaseEntity<int>
+    public interface IDbInitializer
     {
-        public string Name { get; set; }
-
+        public Task InitializeAsync();
     }
 }

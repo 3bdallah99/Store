@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Services.Abstractions
 {
-    public class ProductBrand : BaseEntity<int>
+    public interface IServiceManger
     {
-        public string Name { get; set; }
-
+        public IProductService productService { get;  }
     }
 }

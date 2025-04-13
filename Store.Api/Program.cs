@@ -1,13 +1,18 @@
 
+using Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Persistence;
 using Persistence.Data;
-
+using Services;
+using Services.Abstractions;
+using AssemblyMapping = Services.AssemblyReference;
 namespace Store.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -19,10 +24,22 @@ namespace Store.Api
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<StoreDbContext>(option =>
             {
-                option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
+                //option.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]);
+                option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-
+            builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddAutoMapper(typeof(AssemblyMapping).Assembly);
+            builder.Services.AddScoped<IServiceManger, ServiceManger>();
             var app = builder.Build();
+
+            #region Seeding
+            using var scope = app.Services.CreateScope();
+            var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+            await dbInitializer.InitializeAsync();
+            #endregion
+
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
