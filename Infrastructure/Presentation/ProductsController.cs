@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace Presentation
     public class ProductsController(IServiceManger serviceManger) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetAllProducts ()
+        public async Task<IActionResult> GetAllProducts ([FromQuery] ProductSpecificationsParamters specParams )
         {
-            var result = await serviceManger.productService.GetAllProductsAsync();
+            var result = await serviceManger.productService.GetAllProductsAsync(specParams);
             if (result == null) return BadRequest();
             return  Ok(result);
         }
