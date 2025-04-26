@@ -51,6 +51,10 @@ namespace Store.Api.Middlewares
             response.StatusCode = ex switch
             {
                 NotFoundException => StatusCodes.Status404NotFound,
+                BadRequestException => StatusCodes.Status400BadRequest,
+                ValidationException => HandlingValidationExceptionAsync((ValidationException)ex,response),
+                UnAuthorizedException => StatusCodes.Status401Unauthorized,
+
                 _ => StatusCodes.Status500InternalServerError
             };
 
@@ -68,6 +72,11 @@ namespace Store.Api.Middlewares
                 ErrorMessage = $"End Point {context.Request.Path}is Not Found !! "
             };
             await context.Response.WriteAsJsonAsync(response);
+        }
+        private static int HandlingValidationExceptionAsync(ValidationException ex,ErrorDetails response)
+        {
+            response.Errors = ex.Errors;
+            return StatusCodes.Status400BadRequest;
         }
     }
 }

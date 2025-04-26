@@ -1,6 +1,7 @@
 ﻿using Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Attributes;
 using Services.Abstractions;
 using Shared;
 using Shared.ErrorModels;
@@ -20,8 +21,9 @@ namespace Presentation
         [ProducesResponseType(StatusCodes.Status200OK,Type = typeof(PaginationResponse<ProductResultDto>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError,Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status400BadRequest,Type = typeof(ErrorDetails))]
+        [Cash(100)]
         public async Task<IActionResult> GetAllProducts ([FromQuery] ProductSpecificationsParamters specParams )
-        {
+          {
             var result = await serviceManger.productService.GetAllProductsAsync(specParams);
             return Ok(result); // 200
         }
