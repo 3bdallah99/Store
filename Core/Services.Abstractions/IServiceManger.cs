@@ -13,6 +13,6 @@ namespace Services.Abstractions
         public ICashService cashService { get;  }
         public IAuthenticationService authenticationService { get;}
 
-
+        public IOrderService orderService { get; }
     }
 }

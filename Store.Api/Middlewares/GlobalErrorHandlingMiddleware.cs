@@ -33,7 +33,7 @@ namespace Store.Api.Middlewares
                 await HandlingErrorAsync(context, ex);
 
             }
-        }
+         }
 
         private static async Task HandlingErrorAsync(HttpContext context, Exception ex)
         {
