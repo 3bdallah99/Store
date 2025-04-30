@@ -1,12 +1,16 @@
 ﻿using Domain.Contracts;
 using Domain.Models.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Persistence;
 using Persistence.Identity;
 using Services;
+using Shared;
 using Shared.ErrorModels;
 using Store.Api.Middlewares;
+using System.Text;
 
 namespace Store.Api.Extentions
 {
@@ -19,15 +23,41 @@ namespace Store.Api.Extentions
             services.AddInfrastructureService(configuration);
 
             services.AddIdentityServices();
-            services.AddApplicationServices();
+            services.AddApplicationServices(configuration);
             services.ConfigureServices();
-            
+            services.ConfigureJwtService(configuration); 
+
+
+
             return services;
         }
         private static IServiceCollection AddBuiltInServices(this IServiceCollection services )
         {
             services.AddControllers();
         
+            return services;
+        }
+        private static IServiceCollection ConfigureJwtService(this IServiceCollection services ,IConfiguration configuration)
+        {
+            var JwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+
+                    ValidIssuer = JwtOptions.Issure,
+                    ValidAudience = JwtOptions.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtOptions.SecretKey)),
+                };
+            });
             return services;
         }
         private static IServiceCollection AddIdentityServices(this IServiceCollection services )
@@ -83,8 +113,8 @@ namespace Store.Api.Extentions
             app.UseStaticFiles();
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
             return app;
