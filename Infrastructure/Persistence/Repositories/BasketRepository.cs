@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Persistence.Repositories
 {
-    class BasketRepository(IConnectionMultiplexer connection) : IBasketRepository
+    public class BasketRepository(IConnectionMultiplexer connection) : IBasketRepository
     {
         private readonly IDatabase _database = connection.GetDatabase(); 
         public async Task<CustomerBasket?> GetBasketAsync(string id)
