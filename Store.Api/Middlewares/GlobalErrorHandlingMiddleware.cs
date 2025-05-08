@@ -69,7 +69,7 @@ namespace Store.Api.Middlewares
             var response = new ErrorDetails()
             {
                 StatusCode = StatusCodes.Status404NotFound,
-                ErrorMessage = $"End Point {context.Request.Path}is Not Found !! "
+                ErrorMessage = $"End Point {context.Request.Path} is Not Found !! "
             };
             await context.Response.WriteAsJsonAsync(response);
         }

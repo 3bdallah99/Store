@@ -23,7 +23,6 @@ namespace Presentation
         [ProducesResponseType(StatusCodes.Status500InternalServerError,Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status400BadRequest,Type = typeof(ErrorDetails))]
         [Cash(100)]
-        [Authorize]
         public async Task<IActionResult> GetAllProducts ([FromQuery] ProductSpecificationsParamters specParams )
           {
             var result = await serviceManger.productService.GetAllProductsAsync(specParams);

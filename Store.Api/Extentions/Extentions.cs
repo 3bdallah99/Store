@@ -25,9 +25,17 @@ namespace Store.Api.Extentions
             services.AddIdentityServices();
             services.AddApplicationServices(configuration);
             services.ConfigureServices();
-            services.ConfigureJwtService(configuration); 
+            services.ConfigureJwtService(configuration);
 
-
+            services.AddCors(config =>
+            {
+                config.AddPolicy("MyPolicy", option =>
+                {
+                    option.AllowAnyHeader();
+                    option.AllowAnyMethod();
+                    option.WithOrigins("http://localhost:4200");
+                });
+            });
 
             return services;
         }
@@ -115,7 +123,7 @@ namespace Store.Api.Extentions
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseCors("MyPolicy");
             app.MapControllers();
             return app;
         }
